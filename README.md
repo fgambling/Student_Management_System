@@ -1,0 +1,1 @@
+Developed a comprehensive student information management system to streamline data processing and management in educational institutions, ensuring efficient handling of student records and personal information.
