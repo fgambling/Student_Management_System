@@ -10,12 +10,26 @@ using System.Web.Util;
 
 namespace Student.MsSqlHelper
 {
+    /// <summary>
+    /// SQL Server Database Helper class providing comprehensive database operations.
+    /// This class handles all database interactions including queries, stored procedures,
+    /// transactions, and parameterized operations for the Student Management System.
+    /// </summary>
     public class YFMsSqlHelper
     {
+        /// <summary>
+        /// Database connection string retrieved from application configuration
+        /// </summary>
         public static readonly string connectionString = ConfigurationManager.ConnectionStrings["xiaobai"].ConnectionString;
 
         #region Common Method
 
+        /// <summary>
+        /// Gets the next available ID for a specified field in a table
+        /// </summary>
+        /// <param name="FieldName">Name of the ID field</param>
+        /// <param name="TableName">Name of the table</param>
+        /// <returns>Next available ID (max + 1)</returns>
         public static int GetMaxID(string FieldName, string TableName)
         {
             string strsql = "select max(" + FieldName + ")+1 from " + TableName;
@@ -30,6 +44,11 @@ namespace Student.MsSqlHelper
             }
         }
 
+        /// <summary>
+        /// Checks if a record exists based on the provided SQL query
+        /// </summary>
+        /// <param name="strSql">SQL query to execute</param>
+        /// <returns>True if record exists, false otherwise</returns>
         public static bool Exists(string strSql)
         {
             object obj = GetSingle(strSql);
@@ -52,6 +71,12 @@ namespace Student.MsSqlHelper
             }
         }
 
+        /// <summary>
+        /// Checks if a record exists based on the provided SQL query with parameters
+        /// </summary>
+        /// <param name="strSql">SQL query to execute</param>
+        /// <param name="cmdParms">SQL parameters</param>
+        /// <returns>True if record exists, false otherwise</returns>
         public static bool Exists(string strSql, params SqlParameter[] cmdParms)
         {
             object obj = GetSingle(strSql, cmdParms);
@@ -107,9 +132,9 @@ namespace Student.MsSqlHelper
         /// <summary>
         /// Execute SQL statements and set the execution waiting time of the command
         /// </summary>
-        /// <param name="SQLString"></param>
-        /// <param name="Times"></param>
-        /// <returns></returns>
+        /// <param name="SQLString">SQL statement to execute</param>
+        /// <param name="Times">Timeout in seconds</param>
+        /// <returns>Number of records affected</returns>
         public static int ExecuteSqlByTime(string SQLString, int Times)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -169,9 +194,9 @@ namespace Student.MsSqlHelper
         /// <summary>
         /// Execute a SQL statement with a stored procedure parameter.
         /// </summary>
-        /// <param name="SQLString">SQL语句</param>
-        /// <param name="content"></param>
-        /// <returns></returns>
+        /// <param name="SQLString">SQL statement</param>
+        /// <param name="content">Content parameter</param>
+        /// <returns>Number of records affected</returns>
         public static int ExecuteSql(string SQLString, string content)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -199,11 +224,11 @@ namespace Student.MsSqlHelper
         }
 
         /// <summary>
-        /// Execute a SQL statement with a stored procedure parameter.
+        /// Execute a SQL statement with a stored procedure parameter and return a value.
         /// </summary>
-        /// <param name="SQLString"></param>
-        /// <param name="content"></param>
-        /// <returns></returns>
+        /// <param name="SQLString">SQL statement</param>
+        /// <param name="content">Content parameter</param>
+        /// <returns>Object result from the query</returns>
         public static object ExecuteSqlGet(string SQLString, string content)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -240,7 +265,7 @@ namespace Student.MsSqlHelper
         /// <summary>
         /// Insert image format fields into the database (another example similar to the above)
         /// </summary>
-        /// <param name="strSQL"></param>
+        /// <param name="strSQL">SQL statement</param>
         /// <param name="fs">Image bytes, when the database field type is image</param>
         /// <returns>Number of records affected</returns>
         public static int ExecuteSqlInsertImg(string strSQL, byte[] fs)
@@ -272,8 +297,8 @@ namespace Student.MsSqlHelper
         /// <summary>
         /// Execute a query result calculation statement and return the query result (object).
         /// </summary>
-        /// <param name="SQLString"></param>
-        /// <returns>（object）</returns>
+        /// <param name="SQLString">SQL query statement</param>
+        /// <returns>Query result as object</returns>
         public static object GetSingle(string SQLString)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -305,8 +330,8 @@ namespace Student.MsSqlHelper
         /// <summary>
         /// Execute the query statement and return the SqlDataReader (remember to manually close the SqlDataReader and connection when using this method)
         /// </summary>
-        /// <param name="strSQL"></param>
-        /// <returns>SqlDataReader</returns>
+        /// <param name="strSQL">SQL query statement</param>
+        /// <returns>SqlDataReader object</returns>
         public static SqlDataReader ExecuteReader(string strSQL)
         {
             SqlConnection connection = new SqlConnection(connectionString);
@@ -332,7 +357,7 @@ namespace Student.MsSqlHelper
         /// Execute the query statement and return the DataSet
         /// </summary>
         /// <param name="SQLString">Query statement</param>
-        /// <returns>DataSet</returns>
+        /// <returns>DataSet containing query results</returns>
         public static DataSet Query(string SQLString)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -352,6 +377,12 @@ namespace Student.MsSqlHelper
             }
         }
 
+        /// <summary>
+        /// Execute the query statement and return the DataSet with custom table name
+        /// </summary>
+        /// <param name="SQLString">Query statement</param>
+        /// <param name="TableName">Custom table name for the DataSet</param>
+        /// <returns>DataSet containing query results</returns>
         public static DataSet Query(string SQLString, string TableName)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -374,9 +405,9 @@ namespace Student.MsSqlHelper
         /// <summary>
         /// Execute the query statement, return the DataSet, and set the execution waiting time of the command.
         /// </summary>
-        /// <param name="SQLString"></param>
-        /// <param name="Times"></param>
-        /// <returns></returns>
+        /// <param name="SQLString">Query statement</param>
+        /// <param name="Times">Timeout in seconds</param>
+        /// <returns>DataSet containing query results</returns>
         public static DataSet Query(string SQLString, int Times)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -405,6 +436,7 @@ namespace Student.MsSqlHelper
         /// Execute the SQL statement and return the number of records affected
         /// </summary>
         /// <param name="SQLString">SQL statement</param>
+        /// <param name="cmdParms">SQL parameters</param>
         /// <returns>The number of records affected</returns>
         public static int ExecuteSql(string SQLString, params SqlParameter[] cmdParms)
         {
@@ -465,7 +497,8 @@ namespace Student.MsSqlHelper
         /// <summary>
         /// Execute a statement to calculate the query results and return the query results（object）。
         /// </summary>
-        /// <param name="SQLString"></param>
+        /// <param name="SQLString">SQL query statement</param>
+        /// <param name="cmdParms">SQL parameters</param>
         /// <returns>Query result（object）</returns>
         public static object GetSingle(string SQLString, params SqlParameter[] cmdParms)
         {
@@ -496,10 +529,11 @@ namespace Student.MsSqlHelper
         }
 
         /// <summary>
-        /// 执行查询语句，返回SqlDataReader (使用该方法切记要手工关闭SqlDataReader和连接)
+        /// Execute the query statement, return SqlDataReader (remember to manually close SqlDataReader and connection when using this method)
         /// </summary>
-        /// <param name="strSQL">查询语句</param>
-        /// <returns>SqlDataReader</returns>
+        /// <param name="SQLString">Query statement</param>
+        /// <param name="cmdParms">SQL parameters</param>
+        /// <returns>SqlDataReader object</returns>
         public static SqlDataReader ExecuteReader(string SQLString, params SqlParameter[] cmdParms)
         {
             SqlConnection connection = new SqlConnection(connectionString);
@@ -515,7 +549,7 @@ namespace Student.MsSqlHelper
             {
                 throw new Exception(e.Message);
             }
-            //finally //不能在此关闭，否则，返回的对象将无法使用
+            //finally //Cannot close here, otherwise the returned object will be unusable
             //{
             //	cmd.Dispose();
             //	connection.Close();
@@ -524,10 +558,11 @@ namespace Student.MsSqlHelper
         }
 
         /// <summary>
-        /// 执行查询语句，返回DataSet
+        /// Execute the query statement, return DataSet
         /// </summary>
-        /// <param name="SQLString">查询语句</param>
-        /// <returns>DataSet</returns>
+        /// <param name="SQLString">Query statement</param>
+        /// <param name="cmdParms">SQL parameters</param>
+        /// <returns>DataSet containing query results</returns>
         public static DataSet Query(string SQLString, params SqlParameter[] cmdParms)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -551,6 +586,14 @@ namespace Student.MsSqlHelper
             }
         }
 
+        /// <summary>
+        /// Prepare SQL command with parameters and connection settings
+        /// </summary>
+        /// <param name="cmd">SqlCommand object to prepare</param>
+        /// <param name="conn">Database connection</param>
+        /// <param name="trans">Database transaction</param>
+        /// <param name="cmdText">SQL command text</param>
+        /// <param name="cmdParms">SQL parameters</param>
         public static void PrepareCommand(SqlCommand cmd, SqlConnection conn, SqlTransaction trans, string cmdText, SqlParameter[] cmdParms)
         {
             if (conn.State != ConnectionState.Open)
@@ -578,14 +621,14 @@ namespace Student.MsSqlHelper
 
         #endregion
 
-        #region 存储过程操作
+        #region Stored Procedure Operations
 
         /// <summary>
-        /// 执行存储过程  (使用该方法切记要手工关闭SqlDataReader和连接)
+        /// Execute stored procedure (remember to manually close SqlDataReader and connection when using this method)
         /// </summary>
-        /// <param name="storedProcName">存储过程名</param>
-        /// <param name="parameters">存储过程参数</param>
-        /// <returns>SqlDataReader</returns>
+        /// <param name="storedProcName">Stored procedure name</param>
+        /// <param name="parameters">Stored procedure parameters</param>
+        /// <returns>SqlDataReader object</returns>
         public static SqlDataReader RunProcedure(string storedProcName, IDataParameter[] parameters)
         {
             SqlConnection connection = new SqlConnection(connectionString);
@@ -594,17 +637,17 @@ namespace Student.MsSqlHelper
             SqlCommand command = BuildQueryCommand(connection, storedProcName, parameters);
             command.CommandType = CommandType.StoredProcedure;
             returnReader = command.ExecuteReader();
-            //Connection.Close(); 不能在此关闭，否则，返回的对象将无法使用            
+            //Connection.Close(); Cannot close here, otherwise the returned object will be unusable            
             return returnReader;
 
         }
 
         /// <summary>
-        /// 执行存储过程
+        /// Execute stored procedure
         /// </summary>
-        /// <param name="storedProcName">存储过程名</param>
-        /// <param name="parameters">存储过程参数</param>
-        /// <returns>结果中第一行第一列</returns>
+        /// <param name="storedProcName">Stored procedure name</param>
+        /// <param name="parameters">Stored procedure parameters</param>
+        /// <returns>First row and first column of the result</returns>
         public static string RunProc(string storedProcName, IDataParameter[] parameters)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -620,12 +663,12 @@ namespace Student.MsSqlHelper
         }
 
         /// <summary>
-        /// 执行存储过程
+        /// Execute stored procedure
         /// </summary>
-        /// <param name="storedProcName">存储过程名</param>
-        /// <param name="parameters">存储过程参数</param>
-        /// <param name="tableName">DataSet结果中的表名</param>
-        /// <returns>DataSet</returns>
+        /// <param name="storedProcName">Stored procedure name</param>
+        /// <param name="parameters">Stored procedure parameters</param>
+        /// <param name="tableName">Table name in DataSet result</param>
+        /// <returns>DataSet containing stored procedure results</returns>
         public static DataSet RunProcedure(string storedProcName, IDataParameter[] parameters, string tableName)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -640,6 +683,14 @@ namespace Student.MsSqlHelper
             }
         }
 
+        /// <summary>
+        /// Execute stored procedure with timeout
+        /// </summary>
+        /// <param name="storedProcName">Stored procedure name</param>
+        /// <param name="parameters">Stored procedure parameters</param>
+        /// <param name="tableName">Table name in DataSet result</param>
+        /// <param name="Times">Timeout in seconds</param>
+        /// <returns>DataSet containing stored procedure results</returns>
         public static DataSet RunProcedure(string storedProcName, IDataParameter[] parameters, string tableName, int Times)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -656,12 +707,12 @@ namespace Student.MsSqlHelper
         }
 
         /// <summary>
-        /// 构建 SqlCommand 对象(用来返回一个结果集，而不是一个整数值)
+        /// Build SqlCommand object (used to return a result set, not an integer value)
         /// </summary>
-        /// <param name="connection">数据库连接</param>
-        /// <param name="storedProcName">存储过程名</param>
-        /// <param name="parameters">存储过程参数</param>
-        /// <returns>SqlCommand</returns>
+        /// <param name="connection">Database connection</param>
+        /// <param name="storedProcName">Stored procedure name</param>
+        /// <param name="parameters">Stored procedure parameters</param>
+        /// <returns>SqlCommand object</returns>
         public static SqlCommand BuildQueryCommand(SqlConnection connection, string storedProcName, IDataParameter[] parameters)
         {
             SqlCommand command = new SqlCommand(storedProcName, connection);
@@ -670,7 +721,7 @@ namespace Student.MsSqlHelper
             {
                 if (parameter != null)
                 {
-                    // 检查未分配值的输出参数,将其分配以DBNull.Value.
+                    // Check unassigned output parameters and assign them to DBNull.Value
                     if ((parameter.Direction == ParameterDirection.InputOutput || parameter.Direction == ParameterDirection.Input) &&
                         (parameter.Value == null))
                     {
@@ -684,12 +735,12 @@ namespace Student.MsSqlHelper
         }
 
         /// <summary>
-        /// 执行存储过程，返回影响的行数		
+        /// Execute stored procedure and return the number of affected rows		
         /// </summary>
-        /// <param name="storedProcName">存储过程名</param>
-        /// <param name="parameters">存储过程参数</param>
-        /// <param name="rowsAffected">影响的行数</param>
-        /// <returns></returns>
+        /// <param name="storedProcName">Stored procedure name</param>
+        /// <param name="parameters">Stored procedure parameters</param>
+        /// <param name="rowsAffected">Number of affected rows</param>
+        /// <returns>Return value from stored procedure</returns>
         public static int RunProcedure(string storedProcName, IDataParameter[] parameters, out int rowsAffected)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -705,11 +756,12 @@ namespace Student.MsSqlHelper
         }
 
         /// <summary>
-        /// 创建 SqlCommand 对象实例(用来返回一个整数值)	
+        /// Create SqlCommand object instance (used to return an integer value)	
         /// </summary>
-        /// <param name="storedProcName">存储过程名</param>
-        /// <param name="parameters">存储过程参数</param>
-        /// <returns>SqlCommand 对象实例</returns>
+        /// <param name="connection">Database connection</param>
+        /// <param name="storedProcName">Stored procedure name</param>
+        /// <param name="parameters">Stored procedure parameters</param>
+        /// <returns>SqlCommand object instance</returns>
         public static SqlCommand BuildIntCommand(SqlConnection connection, string storedProcName, IDataParameter[] parameters)
         {
             SqlCommand command = BuildQueryCommand(connection, storedProcName, parameters);
@@ -720,11 +772,10 @@ namespace Student.MsSqlHelper
         }
 
         /// <summary>
-        /// 执行SQL语句
+        /// Execute SQL statement
         /// </summary>
-        /// <param name="storedProcName">存储过程名</param>
-        /// <param name="parameters">存储过程参数</param>
-        /// <returns>结果中第一行第一列</returns>
+        /// <param name="query">SQL query statement</param>
+        /// <returns>First row and first column of the result</returns>
         public static string RunSql(string query)
         {
             string str;

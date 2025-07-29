@@ -9,10 +9,17 @@ using System.Threading.Tasks;
 
 namespace Student.DAL
 {
-
+    /// <summary>
+    /// Data Access Layer for User entity operations.
+    /// This class handles all database operations related to user management
+    /// including CRUD operations, authentication, and user queries.
+    /// </summary>
     public class User
     {
-
+        /// <summary>
+        /// Retrieves all users from the database ordered by ID in descending order
+        /// </summary>
+        /// <returns>List of all users in the system</returns>
         public static List<Student.Model.User> List()
         {
             string strsql = "select * from t_user order by id desc";
@@ -20,6 +27,11 @@ namespace Student.DAL
             return DtToList(dt);
         }
 
+        /// <summary>
+        /// Converts a DataTable to a List of User objects
+        /// </summary>
+        /// <param name="dt">DataTable containing user data</param>
+        /// <returns>List of User objects</returns>
         private static List<Student.Model.User> DtToList(DataTable dt)
         {
             List<Student.Model.User> list = new List<Student.Model.User>();
@@ -34,6 +46,11 @@ namespace Student.DAL
             return list;
         }
 
+        /// <summary>
+        /// Retrieves a specific user by their ID
+        /// </summary>
+        /// <param name="id">User ID to retrieve</param>
+        /// <returns>User object if found, otherwise empty user object</returns>
         public static Model.User Getuser(int id)
         {
             Model.User user = new Model.User();
@@ -55,6 +72,12 @@ namespace Student.DAL
 
         }
 
+        /// <summary>
+        /// Authenticates a user with the provided username and password
+        /// </summary>
+        /// <param name="username">User's login username</param>
+        /// <param name="password">User's login password</param>
+        /// <returns>True if authentication successful, false otherwise</returns>
         public static bool Login(string username, string password)
         {
             if (Search(username))
@@ -66,8 +89,8 @@ namespace Student.DAL
                     return true;
                 }
                 else
-                { 
-                    return false; 
+                {
+                    return false;
                 }
             }
             else
@@ -76,6 +99,11 @@ namespace Student.DAL
             }
         }
 
+        /// <summary>
+        /// Checks if a username exists in the database
+        /// </summary>
+        /// <param name="username">Username to search for</param>
+        /// <returns>True if username exists, false otherwise</returns>
         public static bool Search(string username)
         {
             bool result = false;
@@ -89,6 +117,11 @@ namespace Student.DAL
             return result;
         }
 
+        /// <summary>
+        /// Adds a new user to the database
+        /// </summary>
+        /// <param name="user">User object to add</param>
+        /// <returns>True if user was added successfully, false otherwise</returns>
         public static bool add(Student.Model.User user)
         {
             bool result = false;
@@ -105,6 +138,11 @@ namespace Student.DAL
             return result;
         }
 
+        /// <summary>
+        /// Updates an existing user's information in the database
+        /// </summary>
+        /// <param name="user">User object with updated information</param>
+        /// <returns>True if user was updated successfully, false otherwise</returns>
         public static bool update(Student.Model.User user)
         {
             bool result = false;
@@ -121,6 +159,11 @@ namespace Student.DAL
             return result;
         }
 
+        /// <summary>
+        /// Retrieves a user by their username
+        /// </summary>
+        /// <param name="username">Username to search for</param>
+        /// <returns>User object if found, otherwise empty user object</returns>
         public static Model.User Getuser(string username)
         {
             Model.User user = new Model.User();
@@ -142,6 +185,11 @@ namespace Student.DAL
 
         }
 
+        /// <summary>
+        /// Deletes a user from the database by their ID
+        /// </summary>
+        /// <param name="id">ID of the user to delete</param>
+        /// <returns>True if user was deleted successfully, false otherwise</returns>
         public static bool del(int id)
         {
             bool result = false;
